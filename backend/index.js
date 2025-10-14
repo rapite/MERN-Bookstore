@@ -47,7 +47,10 @@ app.get('/books', async (request, response) => {
     try {
         const books = await Book.find({})
 
-        return response.status(200).json(books)
+        return response.status(200).json({
+            count: books.length,
+            data: books
+        })
     } catch (error) {
         console.log(error.mesage)
         response.status(500).send({ message: error.message });
