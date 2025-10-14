@@ -1,14 +1,18 @@
-import express from "express";
+import express, { request } from "express";
 import { PORT, mongoDBURL } from  "./config.js"
 import mongoose from 'mongoose'
 import { Book } from "./models/bookModel.js";
 
 const app = express()
 
+// Middleware for parsing request body
+app.use(express.json());
+
 app.get('/', (request, response) => {
     console.log(request)
     return response.status(234).send('Welcome to MERN Stack Tutorial')
 }); // used for getting routes
+
 
 // Route for saving a new book
 app.post('/books', async (request, response) => {
@@ -25,13 +29,28 @@ app.post('/books', async (request, response) => {
         const newBook = {
             title: request.body.title,
             author: request.body.author,
-            publishYear: request.body.publishYear,A
+            publishYear: request.body.publishYear,
         }
 
-        const Book = await Book.create(newBook)
+        // returning status code of 201 to send book to the client
+        const book = await Book.create(newBook)
+        return response.status(201).send(book)
+
     } catch (error) {
         console.log(error.message);
         response.status(500).send({ message: error.mesage })
+    }
+})
+
+// Route for Get All Books from database
+app.get('/books', async (request, response) => {
+    try {
+        const books = await Book.find({})
+
+        return response.status(200).json(books)
+    } catch (error) {
+        console.log(error.mesage)
+        response.status(500).send({ message: error.message });
     }
 })
 
