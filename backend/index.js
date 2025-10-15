@@ -10,8 +10,8 @@ const app = express()
 // Middleware for parsing request body
 app.use(express.json());
 // Option 1: Allow all origins with default of cors
+app.use(cors())
 
-//app.use(cors())
 // Option 2: allow custon origins
 app.use(
     cors({
